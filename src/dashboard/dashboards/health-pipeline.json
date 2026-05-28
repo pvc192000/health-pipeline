@@ -1,0 +1,106 @@
+{
+  "dashboard": {
+    "title": "Wearable Health Pipeline",
+    "tags": ["health", "wellness", "iot"],
+    "timezone": "browser",
+    "refresh": "10s",
+    "panels": [
+      {
+        "title": "Kinesis Stream — Incoming Records/sec",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 12, "x": 0, "y": 0},
+        "datasource": "CloudWatch",
+        "targets": [
+          {
+            "namespace": "AWS/Kinesis",
+            "metricName": "IncomingRecords",
+            "dimensions": {"StreamName": ["health-pipeline-wearable-stream"]},
+            "statistics": ["Sum"],
+            "period": "60"
+          }
+        ]
+      },
+      {
+        "title": "Firehose — Delivery to S3 (bytes)",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 12, "x": 12, "y": 0},
+        "datasource": "CloudWatch",
+        "targets": [
+          {
+            "namespace": "AWS/Firehose",
+            "metricName": "DeliveryToS3.Bytes",
+            "dimensions": {"DeliveryStreamName": ["health-pipeline-delivery"]},
+            "statistics": ["Sum"],
+            "period": "60"
+          }
+        ]
+      },
+      {
+        "title": "Average Resting Heart Rate (Daily)",
+        "type": "timeseries",
+        "gridPos": {"h": 7, "w": 12, "x": 0, "y": 6},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT date, AVG(resting_hr) as avg_resting_hr FROM health_pipeline_db.daily_summaries WHERE resting_hr IS NOT NULL GROUP BY date ORDER BY date"
+          }
+        ]
+      },
+      {
+        "title": "Average Daily Steps",
+        "type": "timeseries",
+        "gridPos": {"h": 7, "w": 12, "x": 12, "y": 6},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT date, AVG(steps) as avg_steps FROM health_pipeline_db.daily_summaries WHERE steps IS NOT NULL GROUP BY date ORDER BY date"
+          }
+        ]
+      },
+      {
+        "title": "Wellness Score Distribution",
+        "type": "barchart",
+        "gridPos": {"h": 7, "w": 24, "x": 0, "y": 13},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT 'Sleep Quality' as score, AVG(sleep_quality_predicted) as value FROM health_pipeline_db.wellness_scores UNION ALL SELECT 'Stress Recovery', AVG(stress_recovery_predicted) UNION ALL SELECT 'Activity Strain', AVG(activity_strain_predicted) UNION ALL SELECT 'Illness Risk', AVG(illness_risk_predicted)"
+          }
+        ]
+      },
+      {
+        "title": "Sleep Duration Trend (hours)",
+        "type": "timeseries",
+        "gridPos": {"h": 7, "w": 12, "x": 0, "y": 20},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT date, AVG(sleep_duration)/3600000.0 as avg_sleep_hours FROM health_pipeline_db.daily_summaries WHERE sleep_duration IS NOT NULL GROUP BY date ORDER BY date"
+          }
+        ]
+      },
+      {
+        "title": "HRV (RMSSD) Trend",
+        "type": "timeseries",
+        "gridPos": {"h": 7, "w": 12, "x": 12, "y": 20},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT date, AVG(rmssd) as avg_hrv FROM health_pipeline_db.daily_summaries WHERE rmssd IS NOT NULL GROUP BY date ORDER BY date"
+          }
+        ]
+      },
+      {
+        "title": "Pipeline Stats",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 24, "x": 0, "y": 27},
+        "datasource": "Athena",
+        "targets": [
+          {
+            "rawSQL": "SELECT COUNT(*) as total_records, COUNT(DISTINCT participant_id) as participants, ROUND(AVG(resting_hr),1) as avg_hr, ROUND(AVG(steps),0) as avg_steps FROM health_pipeline_db.daily_summaries"
+          }
+        ]
+      }
+    ]
+  }
+}
