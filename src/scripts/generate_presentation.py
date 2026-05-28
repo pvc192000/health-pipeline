@@ -377,7 +377,7 @@ content_slide("References", [
     "• scikit-learn, PySpark, Pandas, python-pptx",
     "",
     "## Project Repository",
-    "• GitHub: [to be published]",
+    "• GitHub: https://github.com/pvc192000/health-pipeline",
 ])
 
 # 16. Thank you
