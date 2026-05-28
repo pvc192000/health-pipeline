@@ -57,9 +57,9 @@ Three-tier S3 architecture:
 
 | Tier | Bucket | Format | Purpose |
 |------|--------|--------|---------|
-| Raw | `health-pipeline-raw-939295406035` | CSV / JSON | Landing zone, immutable source of truth |
-| Processed | `health-pipeline-processed-939295406035` | Parquet (partitioned) | Cleaned, typed, columnar — optimized for queries |
-| Curated | `health-pipeline-curated-939295406035` | Parquet | ML feature tables and predicted scores |
+| Raw | `health-pipeline-raw-YOUR_ACCOUNT_ID` | CSV / JSON | Landing zone, immutable source of truth |
+| Processed | `health-pipeline-processed-YOUR_ACCOUNT_ID` | Parquet (partitioned) | Cleaned, typed, columnar — optimized for queries |
+| Curated | `health-pipeline-curated-YOUR_ACCOUNT_ID` | Parquet | ML feature tables and predicted scores |
 
 - All buckets have `RemovalPolicy.DESTROY` for easy teardown
 - Raw also stores Kinesis stream output under `kinesis/` prefix
@@ -116,7 +116,7 @@ S3 (Processed) → SageMaker Notebook → Trained Model → S3 (Curated Scores)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                          AWS Account 939295406035                         │
+│                          AWS Account YOUR_ACCOUNT_ID                         │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
 │  ┌──────────┐    ┌──────────┐    ┌──────────────────────┐              │

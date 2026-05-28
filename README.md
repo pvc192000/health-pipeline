@@ -36,7 +36,7 @@ S3 Raw (new data) → EventBridge (5-min batch) → Glue Workflow (Crawler → E
 
 - Python 3.9+
 - AWS CDK CLI (`npm install -g aws-cdk`)
-- AWS credentials configured (account: 939295406035, region: us-east-1)
+- AWS credentials configured (account: YOUR_ACCOUNT_ID, region: us-east-1)
 
 ## Setup
 
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 ## Deploy
 
 ```bash
-cdk bootstrap aws://939295406035/us-east-1   # first time only
+cdk bootstrap aws://YOUR_ACCOUNT_ID/us-east-1   # first time only
 cdk deploy --all
 ```
 
@@ -134,7 +134,7 @@ health-pipeline/
 |------|--------|
 | 2026-05-27 | Initial project scaffolding — CDK stacks (DataLake, Ingestion, Processing, ML), ETL script, data helper, README |
 | 2026-05-27 | Added system-design.md, implementation plan, SageMaker set to deploy stopped |
-| 2026-05-27 | Deployed all 4 stacks to account 939295406035. Added Kinesis producer, ML notebook, sample Athena queries |
+| 2026-05-27 | Deployed all 4 stacks to account YOUR_ACCOUNT_ID. Added Kinesis producer, ML notebook, sample Athena queries |
 | 2026-05-28 | Full pipeline run: data uploaded, ETL succeeded (7410 rows → Parquet), Athena verified, Kinesis/Firehose streaming verified |
 | 2026-05-28 | ML models trained (all R² > 0.95), predictions written to curated bucket, visualizations generated |
 | 2026-05-28 | Glue Workflow orchestration created, cost/scalability analysis written, final README update |
